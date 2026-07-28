@@ -4,12 +4,6 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel, Field
 
-GEMINI_API_KEY = "your_actual_api_key_here"
-import streamlit as st
-from google import genai
-# SecretsからAPIキーを取得
-api_key = st.secrets["GEMINI_API_KEY"]
-client = genai.Client(api_key=api_key)
 # ---------------------------------------------------------
 # ページ設定
 # ---------------------------------------------------------
@@ -19,28 +13,22 @@ st.title("🛍️ 迷い解消！お買い物決断アプリ")
 st.caption("Gemini APIが、あなたの状況に合わせた質問から最適な選択肢を導き出します。")
 
 # ---------------------------------------------------------
-# Clientの初期化（secrets.toml または 環境変数に対応）
+# Clientの初期化（Streamlit Cloud Secrets対応）
 # ---------------------------------------------------------
 @st.cache_resource
 def get_client():
-    api_key = None
-    # 1. secrets.toml からの取得を優先
-    if "GEMINI_API_KEY" in st.secrets:
-        api_key = st.secrets["GEMINI_API_KEY"]
-    # 2. ターミナルの環境変数からの取得
-    elif os.environ.get("GEMINI_API_KEY"):
-        api_key = os.environ.get("GEMINI_API_KEY")
-        
+    # Streamlit Secrets（またはローカル環境変数）から取得
+    api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+    
     if not api_key:
         return None
         
     return genai.Client(api_key=api_key)
 
-# グローバル変数として client を定義
 client = get_client()
 
 if client is None:
-    st.error("APIキーが設定されていません。`.streamlit/secrets.toml` ファイルまたは環境変数を確認してください。")
+    st.error("⚠️ APIキーが設定されていません。Streamlit Cloudの「App settings」>「Secrets」に GEMINI_API_KEY を設定してください。")
     st.stop()
 
 # ---------------------------------------------------------
