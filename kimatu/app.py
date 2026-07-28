@@ -4,6 +4,12 @@ from google import genai
 from google.genai import types
 from pydantic import BaseModel, Field
 
+GEMINI_API_KEY = "your_actual_api_key_here"
+import streamlit as st
+from google import genai
+# SecretsからAPIキーを取得
+api_key = st.secrets["GEMINI_API_KEY"]
+client = genai.Client(api_key=api_key)
 # ---------------------------------------------------------
 # ページ設定
 # ---------------------------------------------------------
