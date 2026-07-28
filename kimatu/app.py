@@ -18,7 +18,7 @@ st.caption("Gemini APIが、あなたの状況に合わせた質問から最適�
 @st.cache_resource
 def get_client():
     # Streamlit Secrets（またはローカル環境変数）から取得
-    api_key = st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY")
+    api_key =os.environ.get("GEMINI_API_KEY")
     
     if not api_key:
         return None
